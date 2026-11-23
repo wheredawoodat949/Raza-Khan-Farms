@@ -43,7 +43,7 @@ function save(path, data) {
 const json = JSON.stringify(config);
 save(file, json);
 if (environment === "local")
-  save(".dev.vars", "LOCAL_DEMO=true\nFAMILY_AUTH='" + json + "'\n");
+  save(".dev.vars", "FAMILY_AUTH='" + json + "'\n");
 console.log(
   password
     ? environment + " login: " + name + " / " + password

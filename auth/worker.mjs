@@ -10,6 +10,14 @@ const publicFiles = new Set([
   "/assets/photo-credits",
   "/assets/photo-credits.html",
 ]);
+// Only these bundled sample dashboard files are public under /demo/.
+const demoAssets = new Set([
+  "/", "/app.js", "/data.js", "/settings.js", "/ui.js", "/styles.css",
+  "/assets/mark.svg", "/assets/fields.jpg", "/assets/rice.jpg", "/assets/valley.jpg",
+  "/assets/photo-credits", "/assets/leaflet/leaflet.css", "/assets/leaflet/leaflet.js",
+  ...["layers-2x", "layers", "marker-icon-2x", "marker-icon", "marker-shadow"]
+    .map(name => "/assets/leaflet/images/" + name + ".png"),
+]);
 const hex = (bytes) =>
   Array.from(new Uint8Array(bytes), (b) =>
     b.toString(16).padStart(2, "0"),
@@ -191,27 +199,23 @@ export default {
       path = url.pathname;
     const language = url.searchParams.get("lang") === "ps" ? "ps" : "en";
     const config = configuration(env);
-    const demoEnabled =
-      env.LOCAL_DEMO === "true" &&
-      ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) &&
-      Boolean(config?.users.length);
     if (request.method === "POST") {
       if (request.headers.get("Origin") !== url.origin)
         return response(null, 403);
       if (path === "/logout") return redirect("/signed-out?lang=" + language, "", 0);
-      if (path === "/demo") {
-        if (!demoEnabled) return response(null, 404);
-        return redirect(
-          "/?lang=" + language,
-          await createSession(config, config.users[0]),
-          lifetime,
-        );
-      }
+      if (path === "/demo") return redirect("/demo/?lang=" + language);
       if (path === "/login")
-        return signIn(request, env, config, language, demoEnabled);
+        return signIn(request, env, config, language, true);
       return response(null, 405);
     }
     if (!["GET", "HEAD"].includes(request.method)) return response(null, 405);
+    if (path === "/demo") return redirect("/demo/?lang=" + language);
+    if (path.startsWith("/demo/")) {
+      const assetPath = path.slice("/demo".length);
+      if (!demoAssets.has(assetPath)) return response(null, 404);
+      url.pathname = assetPath;
+      return env.ASSETS.fetch(new Request(url, { method: request.method }));
+    }
     if (publicFiles.has(path)) return env.ASSETS.fetch(request);
     const authorized = await signedIn(request, config);
     if (path === "/signed-out")
@@ -221,8 +225,8 @@ export default {
         ? redirect("/")
         : login(
             language,
-            demoEnabled,
-            config ? 200 : 503,
+            true,
+            200,
             config ? "" : "setup",
           );
     if (!authorized) {

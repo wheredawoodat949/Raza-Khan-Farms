@@ -1,6 +1,7 @@
 import {
   t,
   prefs,
+  isDemo,
   displayAmount,
   setPreference,
 } from "./settings.js";
@@ -437,7 +438,15 @@ function updateHeader() {
     .querySelectorAll("[data-label]")
     .forEach((el) => el.setAttribute("aria-label", t(el.dataset.label)));
   const signout = document.querySelector("#signout");
-  signout.action = "/logout?lang=" + prefs.language;
+  if (isDemo) {
+    signout.onsubmit = event => {
+      event.preventDefault();
+      location.assign("/login?lang=" + prefs.language);
+    };
+    signout.querySelector("span").dataset.text = "Exit demo";
+  } else {
+    signout.action = "/logout?lang=" + prefs.language;
+  }
   document.querySelectorAll("[data-text]").forEach(el => {
     el.textContent = t(el.dataset.text);
   });

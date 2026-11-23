@@ -1,3 +1,5 @@
+import { isDemo } from "./settings.js";
+
 export const categories = {
   Solar: { color: "#31684e", icon: "sun" },
   Irrigation: { color: "#8bab78", icon: "water" },
@@ -119,7 +121,7 @@ const defaults = { properties: [...properties, markidam], expenses };
 let db;
 export async function openRegister() {
   db = await new Promise((resolve, reject) => {
-    const req = indexedDB.open("aboha-register-preview", 2);
+    const req = indexedDB.open(isDemo ? "raza-khan-farms-demo" : "aboha-register-preview", 2);
     req.onupgradeneeded = ({ oldVersion }) => {
       if (oldVersion === 0) {
         for (const [name, rows] of Object.entries(defaults)) {

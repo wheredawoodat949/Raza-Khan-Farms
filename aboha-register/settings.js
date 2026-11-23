@@ -3,13 +3,15 @@
 export const rate = (276.2004 + 276.6572) / 2;
 export const rateSource =
   "https://www.sbp.org.pk/assets/document/weighted-average-customer-exchange-rates-20-November-2026.pdf";
+export const isDemo = location.pathname.startsWith("/demo/");
+const preferencePrefix = isDemo ? "aboha.demo." : "aboha.";
 export const prefs = {
-  language: localStorage.getItem("aboha.language") === "ps" ? "ps" : "en",
-  currency: localStorage.getItem("aboha.currency") === "PKR" ? "PKR" : "USD",
+  language: localStorage.getItem(preferencePrefix + "language") === "ps" ? "ps" : "en",
+  currency: localStorage.getItem(preferencePrefix + "currency") === "PKR" ? "PKR" : "USD",
 };
 export function setPreference(name, value) {
   prefs[name] = value;
-  localStorage.setItem("aboha." + name, value);
+  localStorage.setItem(preferencePrefix + name, value);
 }
 export const locale = () =>
   prefs.language === "ps" ? "ps-PK-u-ca-gregory" : "en-GB";
@@ -23,6 +25,7 @@ const pashto = {
   "Default data restored": "اصلي معلومات بېرته راوړل شول",
   "All portfolio data deleted": "د ملکیتونو ټول معلومات ړنګ شول",
   "Close other Raza Khan Farms tabs to finish updating this browser.": "د تازه کولو لپاره د رضا خان فارمز نور ټبونه وتړئ.",
+  "Exit demo": "له ازمایښتي بڼې وتل",
   "Sign out": "وتل",
   "Welcome": "ښه راغلاست",
   Aboha: "ابوها",
