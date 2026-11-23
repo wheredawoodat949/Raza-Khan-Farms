@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "wrangler": "4.166.0"
+  },
+  "name": "raza-khan-farms",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --ip 127.0.0.1 --port 4174",
+    "deploy": "wrangler deploy"
+  }
+}

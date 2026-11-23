@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#183f32" />
+    <link rel="license" href="assets/photo-credits.html" />
     <title>Raza Khan Farms</title>
     <link rel="icon" href="assets/mark.svg" />
     <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
@@ -29,20 +30,25 @@
             <button data-language="ps" lang="ps">پښتو</button>
           </div>
           <div class="switch" role="group" data-label="Currency" dir="ltr">
-            <button data-currency="PKR">PKR</button
-            ><button data-currency="USD">USD</button>
+            <button data-currency="USD">USD</button
+            ><button data-currency="PKR">PKR</button>
           </div>
         </div>
+        <form id="signout" method="post" action="/logout">
+          <button type="submit" class="account-button">
+            <svg class="avatar" width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+              <circle cx="16" cy="12" r="5" fill="currentColor"/>
+              <path d="M5 29a11 11 0 0 1 22 0" fill="currentColor"/>
+            </svg>
+            <span data-text="Sign out">Sign out</span>
+          </button>
+        </form>
       </div>
     </header>
-    <aside id="rate-note" hidden></aside>
     <main id="content" tabindex="-1"></main>
     <footer>
-      <span>Raza Khan Farms</span
-      ><span
-        >Sample portfolio · Saved in this browser &nbsp;
-        <button data-act="credits" class="text">Photo credits</button></span
-      >
+      <button type="button" class="btn" data-act="restore-portfolio" data-text="Restore default data">Restore default data</button>
+      <button type="button" class="btn destructive" data-act="clear-portfolio" data-text="Delete all data">Delete all data</button>
     </footer>
     <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
     <div id="toast" role="status"></div>

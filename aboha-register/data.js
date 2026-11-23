@@ -113,41 +113,45 @@ const expenses = [
   amount,
   date,
 }));
+const markidam = { id: "markidam", name: "Markidam", locality: "Aboha", values: [] };
+const defaults = { properties: [...properties, markidam], expenses };
+
 let db;
 export async function openRegister() {
   db = await new Promise((resolve, reject) => {
-    const req = indexedDB.open("aboha-register-preview", 1);
-    req.onupgradeneeded = () => {
-      for (const [name, rows] of Object.entries({ properties, expenses })) {
-        const store = req.result.createObjectStore(name, { keyPath: "id" });
-        rows.forEach((row) => store.add(row));
+    const req = indexedDB.open("aboha-register-preview", 2);
+    req.onupgradeneeded = ({ oldVersion }) => {
+      if (oldVersion === 0) {
+        for (const [name, rows] of Object.entries(defaults)) {
+          const store = req.result.createObjectStore(name, { keyPath: "id" });
+          rows.forEach(row => store.add(row));
+        }
+      } else {
+        // Older registers may predate Markidam. Preserve existing properties and edits.
+        const store = req.transaction.objectStore("properties");
+        const records = store.getAll();
+        records.onsuccess = () => {
+          const exists = records.result.some(p => p.id === markidam.id ||
+            (p.name.trim().toLowerCase() === "markidam" && p.locality?.toLowerCase().includes("aboha")));
+          if (!exists) store.add(markidam);
+        };
       }
     };
+    req.onblocked = () => window.dispatchEvent(new Event("register-blocked"));
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
-  // Seed this location for existing browsers as well as first-time visitors.
-  await new Promise((resolve, reject) => {
-    const tx = db.transaction("properties", "readwrite"),
-      store = tx.objectStore("properties");
-    const req = store.getAll();
-    req.onsuccess = () => {
-      if (
-        !req.result.some(
-          (p) =>
-            p.id === "markidam" ||
-            (p.name.trim().toLowerCase() === "markidam" &&
-              p.locality?.toLowerCase().includes("aboha")),
-        )
-      ) {
-        store.add({
-          id: "markidam",
-          name: "Markidam",
-          locality: "Aboha",
-          values: [],
-        });
-      }
-    };
+  db.onversionchange = () => db.close();
+}
+
+export function replacePortfolio(restore) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(Object.keys(defaults), "readwrite");
+    for (const [name, rows] of Object.entries(defaults)) {
+      const store = tx.objectStore(name);
+      store.clear();
+      if (restore) rows.forEach(row => store.add(row));
+    }
     tx.oncomplete = resolve;
     tx.onabort = () => reject(tx.error);
   });

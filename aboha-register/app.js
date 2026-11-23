@@ -3,11 +3,10 @@ import {
   prefs,
   displayAmount,
   setPreference,
-  rate,
-  rateSource,
 } from "./settings.js";
 import {
   openRegister,
+  replacePortfolio,
   readRows,
   updateRow,
   categories,
@@ -437,22 +436,11 @@ function updateHeader() {
   document
     .querySelectorAll("[data-label]")
     .forEach((el) => el.setAttribute("aria-label", t(el.dataset.label)));
-  const foot = document.querySelector("footer");
-  foot.firstElementChild.textContent = t("Raza Khan Farms");
-  foot.lastElementChild.firstChild.textContent =
-    t("Sample portfolio · Saved in this browser") + "  ";
-  foot.querySelector("button").textContent = t("Photo credits");
-  const note = document.querySelector("#rate-note");
-  note.hidden = prefs.currency !== "USD";
-  note.innerHTML =
-    t("USD estimates") +
-    " · <bdi>1 USD ≈ PKR " +
-    rate.toFixed(4) +
-    '</bdi> · <a target="_blank" rel="noreferrer" href="' +
-    rateSource +
-    '">' +
-    t("SBP · 20 Nov 2026") +
-    "</a>";
+  const signout = document.querySelector("#signout");
+  signout.action = "/logout?lang=" + prefs.language;
+  document.querySelectorAll("[data-text]").forEach(el => {
+    el.textContent = t(el.dataset.text);
+  });
 }
 function render() {
   updateHeader();
@@ -797,12 +785,6 @@ function metricDetail(key) {
       .join(""),
   );
 }
-function credits() {
-  modal(
-    "Regional photography",
-    `<div class="credits"><p>${t("Swat Valley photographs illustrate this sample portfolio.")}</p><p><a href="https://commons.wikimedia.org/wiki/File:Rice_Field_3.jpg">Rice Field 3</a> by Zulfiqargul · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></p><p><a href="https://commons.wikimedia.org/wiki/File:Beautiful_fields_of_swat_valley.jpg">Beautiful fields of Swat Valley</a> by Davod shah · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p><p><a href="https://commons.wikimedia.org/wiki/File:Barikot_Swat.jpg">Barikot Swat</a> by Junaidglg · CC0</p><p>${t("Photographs cropped for display.")}</p></div>`,
-  );
-}
 function openPicker() {
   const el = dlg.querySelector("#picker");
   if (!el.hidden) return;
@@ -832,6 +814,32 @@ function download(file) {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
+function confirmPortfolioChange(restore) {
+  const title = restore ? "Restore default data" : "Delete all data";
+  const description = restore
+    ? "Replace every property, expense and attachment in this browser with the original sample portfolio?"
+    : "Delete every property, expense and attachment in this browser? Your edits cannot be recovered.";
+  modal(title, `<p>${t(description)}</p><div class="form-actions">
+    ${btn("Cancel", "close")}${btn(title, "confirm-replacement", "", restore ? "primary" : "destructive")}
+  </div>`);
+  const confirm = dlg.querySelector('[data-act="confirm-replacement"]');
+  confirm.onclick = async () => {
+    confirm.disabled = true;
+    try {
+      await replacePortfolio(restore);
+      search = type = spendingFilter = "";
+      view = "list";
+      history.replaceState(null, "", "#overview");
+      dlg.close();
+      await refresh();
+      window.scrollTo(0, 0);
+      notify(restore ? "Default data restored" : "All portfolio data deleted");
+    } catch {
+      confirm.disabled = false;
+      notify("Could not save. Please try again.");
+    }
+  };
+}
 document.addEventListener("click", (event) => {
   const pref = event.target.closest("[data-language],[data-currency]");
   if (pref) {
@@ -845,6 +853,10 @@ document.addEventListener("click", (event) => {
   const { act, key } = button.dataset,
     p = propertyById(current().slice(2));
   switch (act) {
+    case "restore-portfolio":
+    case "clear-portfolio":
+      confirmPortfolioChange(act === "restore-portfolio");
+      break;
     case "view":
       view = key;
       render();
@@ -871,9 +883,6 @@ document.addEventListener("click", (event) => {
       break;
     case "value":
       valueForm(p);
-      break;
-    case "credits":
-      credits();
       break;
     case "close":
       dlg.close();
@@ -1016,6 +1025,18 @@ window.addEventListener("hashchange", () => {
   if (dlg.open) dlg.close();
   render();
   window.scrollTo(0, 0);
+});
+// A restored browser history entry must re-check its session after sign-out.
+window.addEventListener("pageshow", event => { if(event.persisted) location.reload(); });
+const initialLanguage = new URL(location.href).searchParams.get("lang");
+if (initialLanguage === "en" || initialLanguage === "ps") {
+  setPreference("language", initialLanguage);
+  const clean = new URL(location.href);
+  clean.searchParams.delete("lang");
+  history.replaceState(null, "", clean);
+}
+window.addEventListener("register-blocked", () => {
+  main.textContent = t("Close other Raza Khan Farms tabs to finish updating this browser.");
 });
 try {
   await openRegister();

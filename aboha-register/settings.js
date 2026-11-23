@@ -5,7 +5,7 @@ export const rateSource =
   "https://www.sbp.org.pk/assets/document/weighted-average-customer-exchange-rates-20-November-2026.pdf";
 export const prefs = {
   language: localStorage.getItem("aboha.language") === "ps" ? "ps" : "en",
-  currency: localStorage.getItem("aboha.currency") === "USD" ? "USD" : "PKR",
+  currency: localStorage.getItem("aboha.currency") === "PKR" ? "PKR" : "USD",
 };
 export function setPreference(name, value) {
   prefs[name] = value;
@@ -16,6 +16,14 @@ export const locale = () =>
 export const displayAmount = (n) => (prefs.currency === "USD" ? n / rate : n);
 
 const pashto = {
+  "Restore default data": "اصلي معلومات بېرته راوړئ",
+  "Delete all data": "ټول معلومات ړنګ کړئ",
+  "Replace every property, expense and attachment in this browser with the original sample portfolio?": "په دې براوزر کې ټول ملکیتونه، لګښتونه او ضمیمې په اصلي بېلګه‌ییزو معلوماتو بدلې کړئ؟",
+  "Delete every property, expense and attachment in this browser? Your edits cannot be recovered.": "په دې براوزر کې ټول ملکیتونه، لګښتونه او ضمیمې ړنګې کړئ؟ ستاسو بدلونونه بېرته نه شي راګرځېدلی.",
+  "Default data restored": "اصلي معلومات بېرته راوړل شول",
+  "All portfolio data deleted": "د ملکیتونو ټول معلومات ړنګ شول",
+  "Close other Raza Khan Farms tabs to finish updating this browser.": "د تازه کولو لپاره د رضا خان فارمز نور ټبونه وتړئ.",
+  "Sign out": "وتل",
   "Welcome": "ښه راغلاست",
   Aboha: "ابوها",
   "Land Register": "د ځمکو ثبت",

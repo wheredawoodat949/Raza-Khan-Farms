@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "raza-khan-farms",
+  "main": "auth/worker.mjs",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./aboha-register",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "ratelimits": [{
+    "name": "LOGIN_LIMIT",
+    "namespace_id": "317401",
+    "simple": {"limit": 12, "period": 60}
+  }]
+}
