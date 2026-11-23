@@ -1,0 +1,161 @@
+// The portfolio stores rupees. The USD view uses the midpoint of the SBP
+// indicative buying and selling rates published on 20 November 2026.
+export const rate = (276.2004 + 276.6572) / 2;
+export const rateSource =
+  "https://www.sbp.org.pk/assets/document/weighted-average-customer-exchange-rates-20-November-2026.pdf";
+export const prefs = {
+  language: localStorage.getItem("aboha.language") === "ps" ? "ps" : "en",
+  currency: localStorage.getItem("aboha.currency") === "USD" ? "USD" : "PKR",
+};
+export function setPreference(name, value) {
+  prefs[name] = value;
+  localStorage.setItem("aboha." + name, value);
+}
+export const locale = () =>
+  prefs.language === "ps" ? "ps-PK-u-ca-gregory" : "en-GB";
+export const displayAmount = (n) => (prefs.currency === "USD" ? n / rate : n);
+
+const pashto = {
+  "Welcome": "ښه راغلاست",
+  Aboha: "ابوها",
+  "Land Register": "د ځمکو ثبت",
+  "Raza Khan Farms": "رضا خان فارمز",
+  Overview: "لنډیز",
+  Properties: "ملکیتونه",
+  Expenses: "لګښتونه",
+  "Main navigation": "اصلي غورنۍ",
+  "Skip to content": "منځپانګې ته لاړ شئ",
+  Language: "ژبه",
+  Currency: "اسعار",
+  "Photo credits": "د انځورونو سرچینې",
+  "Sample portfolio · Saved in this browser":
+    "بېلګه‌ییز ثبت · په دې براوزر کې خوندي شوی",
+  "Aboha, Swat Valley": "ابوها، د سوات دره",
+  "Estimated value": "اټکلی ارزښت",
+  "Purchase cost": "د پېر بیه",
+  Improvements: "د ښه والي چارې",
+  "Paid project expenses": "د پروژو ورکړل شوي لګښتونه",
+  "No properties recorded": "هېڅ ملکیت نه دی ثبت شوی",
+  "Across {n} of {total} properties":
+    "له {total} ملکیتونو څخه د {n} ملکیتونو لپاره",
+  Agricultural: "کرنیز",
+  Commercial: "سوداګریز",
+  Other: "نور",
+  Unspecified: "نه دی ټاکل شوی",
+  Land: "ځمکه",
+  Unknown: "نامعلوم",
+  "Add property": "ملکیت زیات کړئ",
+  "Record expense": "لګښت ثبت کړئ",
+  "My properties": "زما ملکیتونه",
+  "Property register": "د ملکیتونو ثبت",
+  "Property display": "د ملکیتونو ښودنه",
+  List: "لړلیک",
+  Map: "نقشه",
+  Property: "ملکیت",
+  "Land use": "د ځمکې کارونه",
+  "Est. value": "اټکلی ارزښت",
+  "Location unknown": "ځای نامعلوم دی",
+  "No matching properties.": "هېڅ سمون لرونکی ملکیت ونه موندل شو.",
+  "Search properties": "ملکیت ولټوئ",
+  "Search name or location": "نوم یا ځای ولټوئ",
+  "All land uses": "د ځمکې ټول ډولونه",
+  "Spending breakdown": "د لګښتونو وېش",
+  "Total spent after purchase": "له پېر وروسته ټول لګښت",
+  Solar: "لمریزه انرژي",
+  Irrigation: "اوبه لګونه",
+  Renovation: "بیارغونه",
+  "Other improvements": "د ښه والي نورې چارې",
+  Bills: "بیلونه",
+  "Recent expenses": "وروستي لګښتونه",
+  "View all expenses": "ټول لګښتونه وګورئ",
+  "No expenses recorded.": "هېڅ لګښت نه دی ثبت شوی.",
+  "All properties": "ټول ملکیتونه",
+  "Edit property": "ملکیت سم کړئ",
+  "Improvement projects": "د ښه والي پروژې",
+  "No project expenses recorded.": "د پروژو لګښتونه نه دي ثبت شوي.",
+  "Other paid bills": "نور ورکړل شوي بیلونه",
+  "Property record": "د ملکیت معلومات",
+  "Purchase date": "د پېر نېټه",
+  "Paid bills": "ورکړل شوي بیلونه",
+  Landmark: "د ځای نښه",
+  "Map pin": "پر نقشه نښه",
+  "View location": "ځای وګورئ",
+  Deed: "قباله",
+  "Download file": "دوتنه ښکته کړئ",
+  Valuations: "د ارزښت اټکلونه",
+  "No estimates recorded.": "هېڅ اټکل نه دی ثبت شوی.",
+  Add: "زیات کړئ",
+  "Expense ledger": "د لګښتونو کتاب",
+  "Expense category": "د لګښت ډول",
+  "All categories": "ټول ډولونه",
+  "Page unavailable": "پاڼه نشته",
+  "Return to overview": "لنډیز ته ستانه شئ",
+  Close: "بند کړئ",
+  Cancel: "لغوه کړئ",
+  "Property name": "د ملکیت نوم",
+  Locality: "سیمه",
+  "Land area and unit": "د ځمکې مساحت او واحد",
+  "Purchase price (PKR)": "د پېر بیه (پاکستانۍ روپۍ)",
+  Latitude: "عرض البلد",
+  Longitude: "طول البلد",
+  "Choose pin on map": "پر نقشه ځای وټاکئ",
+  "Deed file (optional)": "د قبالې دوتنه (اختیاري)",
+  "Save property": "ملکیت خوندي کړئ",
+  "e.g. Aboha": "لکه ابوها",
+  "e.g. 12 kanal": "لکه ۱۲ کناله",
+  "e.g. Solar panel installation": "لکه د لمریزو تختو لګول",
+  "Choose or enter a name": "نوم وټاکئ یا یې ولیکئ",
+  "e.g. Local agent": "لکه د سیمې د ملکیتونو دلال",
+  "Edit expense": "لګښت سم کړئ",
+  "Add a property first": "لومړی یو ملکیت زیات کړئ",
+  "Choose property": "ملکیت وټاکئ",
+  Description: "تفصیل",
+  "Amount paid (PKR)": "ورکړل شوې اندازه (پاکستانۍ روپۍ)",
+  "Date paid": "د ورکړې نېټه",
+  Category: "ډول",
+  Project: "پروژه",
+  "Vendor (optional)": "پلورونکی (اختیاري)",
+  "Receipt (optional)": "رسید (اختیاري)",
+  "Save expense": "لګښت خوندي کړئ",
+  Download: "ښکته کړئ",
+  Saved: "خوندي شوی",
+  "Add valuation": "د ارزښت اټکل زیات کړئ",
+  "Estimated value (PKR)": "اټکلی ارزښت (پاکستانۍ روپۍ)",
+  "Valuation date": "د اټکل نېټه",
+  "Source (optional)": "سرچینه (اختیاري)",
+  "Save valuation": "اټکل خوندي کړئ",
+  "Improvement spending": "د ښه والي لګښتونه",
+  "Regional photography": "د سیمې انځورونه",
+  "Swat Valley photographs illustrate this sample portfolio.":
+    "د سوات درې انځورونه په دې بېلګه‌ییز ثبت کې کارول شوي دي.",
+  "Photographs cropped for display.": "انځورونه د ښودلو لپاره پرې شوي دي.",
+  "Tap the map to place a pin.": "د نښې لګولو لپاره پر نقشه ټک وکړئ.",
+  "Map imagery requires an internet connection.":
+    "د نقشې انځورونو لپاره انټرنېټ ته اړتیا ده.",
+  "{n} of {total} properties have a saved pin.":
+    "له {total} ملکیتونو څخه د {n} ځایونه پر نقشه ثبت شوي دي.",
+  "Zoom in": "نقشه لویه کړئ",
+  "Zoom out": "نقشه کوچنۍ کړئ",
+  "Property saved": "ملکیت خوندي شو",
+  "Expense saved": "لګښت خوندي شو",
+  "Valuation saved": "د ارزښت اټکل خوندي شو",
+  "Enter a property name.": "د ملکیت نوم ولیکئ.",
+  "Enter an expense description.": "د لګښت تفصیل ولیکئ.",
+  "Enter both coordinates or leave both blank.":
+    "دواړه مختصات ولیکئ یا دواړه تش پرېږدئ.",
+  "Browser storage is full. Try a smaller attachment.":
+    "د براوزر زېرمه ډکه ده. کوچنۍ دوتنه وکاروئ.",
+  "Could not save. Please try again.": "خوندي نه شو. بیا هڅه وکړئ.",
+  "Browser storage unavailable": "د براوزر زېرمه نشته",
+  "Allow local site storage and reload to open the sample portfolio.":
+    "د پاڼې ځايي زېرمه فعاله کړئ او پاڼه بیا پرانیزئ.",
+  "USD estimates": "د ډالرو اټکل",
+  "SBP · 20 Nov 2026": "د پاکستان سټېټ بانک · ۲۰ نومبر ۲۰۲۶",
+  "Approx.": "شاوخوا",
+};
+export function t(key, values = {}) {
+  let text = (prefs.language === "ps" ? pashto[key] : null) ?? key;
+  for (const [name, value] of Object.entries(values))
+    text = text.replace("{" + name + "}", value);
+  return text;
+}

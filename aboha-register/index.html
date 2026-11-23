@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#183f32" />
+    <title>Raza Khan Farms</title>
+    <link rel="icon" href="assets/mark.svg" />
+    <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="styles.css?v=raza-khan-farms" />
+    <script src="assets/leaflet/leaflet.js" defer></script>
+    <script type="module" src="app.js?v=raza-khan-farms"></script>
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+    <header>
+      <div class="top">
+        <a class="brand" href="#overview">
+          <img src="assets/mark.svg" alt="" />
+          <span dir="auto">Raza Khan Farms</span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="#overview">Overview</a><a href="#properties">Properties</a
+          ><a href="#expenses">Expenses</a>
+        </nav>
+        <div class="preferences">
+          <div class="switch" role="group" data-label="Language">
+            <button data-language="en" lang="en">English</button>
+            <button data-language="ps" lang="ps">پښتو</button>
+          </div>
+          <div class="switch" role="group" data-label="Currency" dir="ltr">
+            <button data-currency="PKR">PKR</button
+            ><button data-currency="USD">USD</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside id="rate-note" hidden></aside>
+    <main id="content" tabindex="-1"></main>
+    <footer>
+      <span>Raza Khan Farms</span
+      ><span
+        >Sample portfolio · Saved in this browser &nbsp;
+        <button data-act="credits" class="text">Photo credits</button></span
+      >
+    </footer>
+    <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+    <div id="toast" role="status"></div>
+  </body>
+</html>
